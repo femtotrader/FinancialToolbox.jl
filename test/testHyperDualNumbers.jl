@@ -14,6 +14,9 @@ ThetaCall=blstheta(spot,K,r,T,sigma,d);
 RhoCall=blsrho(spot,K,r,T,sigma,d);
 LambdaCall=blslambda(spot,K,r,T,sigma,d);
 VannaCall=blsvanna(spot,K,r,T,sigma,d);
+VetaCall=blsveta(spot,K,r,T,sigma,d);
+VommaCall=blsvomma(spot,K,r,T,sigma,d);
+
 
 #EuropeanPut Option
 PricePut=blsprice(spot,K,r,T,sigma,d,false);
@@ -22,6 +25,9 @@ ThetaPut=blstheta(spot,K,r,T,sigma,d,false);
 RhoPut=blsrho(spot,K,r,T,sigma,d,false);
 LambdaPut=blslambda(spot,K,r,T,sigma,d,false);
 VannaPut=blsvanna(spot,K,r,T,sigma,d,false);
+VetaPut=blsveta(spot,K,r,T,sigma,d,false);
+VommaPut=blsvomma(spot,K,r,T,sigma,d,false);
+
 
 #Equals for both Options
 Gamma=blsgamma(spot,K,r,T,sigma,d);
@@ -32,7 +38,7 @@ HyperDualNumbersPkgVersion = Pkg.installed("HyperDualNumbers");
 if (HyperDualNumbersPkgVersion<=VersionNumber(1,0,0))
 #i hope that in the next release they will put also the erf function.
 	println("The last release of HyperDualNumbers Module does not support erf function.")
-	println("Downloading the master branch ...")
+	println("Checking Out the master branch ...")
 	Pkg.checkout("HyperDualNumbers")
 end
 using HyperDualNumbers;

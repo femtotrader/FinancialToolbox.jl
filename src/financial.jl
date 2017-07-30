@@ -511,3 +511,100 @@ function blsvanna{num1 ,num2 ,num3 ,num4 ,num5 ,num6 <: Number}(S0::num1,K::num2
   Out=-exp(-d*T)*normpdf(d1)*d2/sigma;
 return Out;
 end
+
+"""
+Black & Scholes Charm for European Options
+
+    Charm=blscharm(S0,K,r,T,sigma,d=0.0,FlagIsCall=true)
+	
+Where:\n
+	S0         = Value of the Underlying.
+	K          = Strike Price of the Option.
+	r          = Zero Rate.
+	T          = Time to Maturity of the Option.
+	sigma      = Implied Volatility.
+	d          = Implied Dividend of the Underlying.
+	FlagIsCall = true for Call Options, false for Put Options.
+
+	Charm        = charm of the European Option.
+
+# Example
+```julia-repl
+julia> blscharm(10.0,10.0,0.01,2.0,0.2,0.01)
+-0.008235708163792394
+```
+"""
+function blscharm{num1 ,num2 ,num3 ,num4 ,num5 ,num6 <: Number}(S0::num1,K::num2,r::num3,T::num4,sigma::num5,d::num6=0.0,FlagIsCall::Bool=true)
+  blscheck(S0,K,r,T,sigma,d);
+  d1=(log(S0/K)+(r-d+sigma*sigma*0.5)*T)/(sigma*sqrt(T));
+  d2=d1-sigma*sqrt(T);
+  
+  Out=((2*(r-d)*T-d2*sigma*sqrt(T))/(2*T*sigma*sqrt(T)))*(-exp(-d*T)*normpdf(d1));
+  if FlagIsCall
+	Out+=d*exp(-d*T)*normcdf(d1);
+  else
+	Out+=(-d*exp(-d*T)*normcdf(d1));
+  end
+return Out;
+end
+
+"""
+Black & Scholes Vomma for European Options
+
+    Vomma=blsvomma(S0,K,r,T,sigma,d=0.0,FlagIsCall=true)
+	
+Where:\n
+	S0         = Value of the Underlying.
+	K          = Strike Price of the Option.
+	r          = Zero Rate.
+	T          = Time to Maturity of the Option.
+	sigma      = Implied Volatility.
+	d          = Implied Dividend of the Underlying.
+	FlagIsCall = true for Call Options, false for Put Options.
+
+	Vomma        = vomma of the European Option.
+
+# Example
+```julia-repl
+julia> blsvomma(10.0,10.0,0.01,2.0,0.2,0.01)
+-0.5475152614285133
+```
+"""
+function blsvomma{num1 ,num2 ,num3 ,num4 ,num5 ,num6 <: Number}(S0::num1,K::num2,r::num3,T::num4,sigma::num5,d::num6=0.0,FlagIsCall::Bool=true)
+  blscheck(S0,K,r,T,sigma,d);
+  Out=blsvega(S0,K,r,T,sigma,d,FlagIsCall);
+  d1=(log(S0/K)+(r-d+sigma*sigma*0.5)*T)/(sigma*sqrt(T));
+  d2=d1-sigma*sqrt(T);
+  Out*=d1*d2/sigma;
+return Out;
+end
+
+"""
+Black & Scholes Veta for European Options
+
+    Veta=blsveta(S0,K,r,T,sigma,d=0.0,FlagIsCall=true)
+	
+Where:\n
+	S0         = Value of the Underlying.
+	K          = Strike Price of the Option.
+	r          = Zero Rate.
+	T          = Time to Maturity of the Option.
+	sigma      = Implied Volatility.
+	d          = Implied Dividend of the Underlying.
+	FlagIsCall = true for Call Options, false for Put Options.
+
+	Veta        = veta of the European Option.
+
+# Example
+```julia-repl
+julia> blsveta(10.0,10.0,0.01,2.0,0.2,0.01)
+0.2737576307142566
+```
+"""
+function blsveta{num1 ,num2 ,num3 ,num4 ,num5 ,num6 <: Number}(S0::num1,K::num2,r::num3,T::num4,sigma::num5,d::num6=0.0,FlagIsCall::Bool=true)
+  blscheck(S0,K,r,T,sigma,d);
+  d1=(log(S0/K)+(r-d+sigma*sigma*0.5)*T)/(sigma*sqrt(T));
+  d2=d1-sigma*sqrt(T);
+  Out=S0*exp(-d*T)*normpdf(d1)*sqrt(T)*(d+(r-d)*d1/(sigma*sqrt(T))-(1+d1*d2)/(2*T));
+return -1*Out;#The Wikipedia Formula seems wrong
+end

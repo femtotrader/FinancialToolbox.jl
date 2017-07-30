@@ -14,6 +14,9 @@ ThetaCall=blstheta(spot,K,r,T,sigma,d);
 RhoCall=blsrho(spot,K,r,T,sigma,d);
 LambdaCall=blslambda(spot,K,r,T,sigma,d);
 VannaCall=blsvanna(spot,K,r,T,sigma,d);
+VetaCall=blsveta(spot,K,r,T,sigma,d);
+VommaCall=blsvomma(spot,K,r,T,sigma,d);
+
 
 #EuropeanPut Option
 PricePut=blsprice(spot,K,r,T,sigma,d,false);
@@ -22,6 +25,9 @@ ThetaPut=blstheta(spot,K,r,T,sigma,d,false);
 RhoPut=blsrho(spot,K,r,T,sigma,d,false);
 LambdaPut=blslambda(spot,K,r,T,sigma,d,false);
 VannaPut=blsvanna(spot,K,r,T,sigma,d,false);
+VetaPut=blsveta(spot,K,r,T,sigma,d,false);
+VommaPut=blsvomma(spot,K,r,T,sigma,d,false);
+
 
 #Equals for both Options
 Gamma=blsgamma(spot,K,r,T,sigma,d);

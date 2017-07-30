@@ -21,7 +21,10 @@ module FinancialModule
 		blkimpv,
 		##	ADDITIONAL Function
 		blspsi,
-		blsvanna
+		blsvanna,
+		blscharm,
+		blsvomma,
+		blsveta
 
 
 
