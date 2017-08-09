@@ -30,7 +30,12 @@ julia> blsprice(10.0,10.0,0.01,2.0,0.2,0.01)
 ```
 """
 function blsprice{num1 ,num2 ,num3 ,num4 ,num5 ,num6 <: Number}(S0::num1,K::num2,r::num3,T::num4,σ::num5,d::num6=0.0,FlagIsCall::Bool=true)
-  blscheck(S0,K,r,T,σ,d);
+  funcname="blsprice";
+  try
+    blscheck(S0,K,r,T,σ,d);
+  catch e
+    error("function $funcname failed with the following error: $(e.msg)")
+  end
   d1=(log(S0/K)+(r-d+σ*σ*0.5)*T)/(σ*sqrt(T));
   d2=d1-σ*sqrt(T);
   Price=0.0;
@@ -65,7 +70,12 @@ julia> blkprice(10.0,10.0,0.01,2.0,0.2)
 ```
 """
 function blkprice{num1 ,num2 ,num3 ,num4 ,num5 <: Number}(F0::num1,K::num2,r::num3,T::num4,σ::num5,FlagIsCall::Bool=true)
-  blscheck(F0,K,r,T,σ);
+  funcname="blkprice";
+  try
+    blscheck(F0,K,r,T,σ);
+  catch e
+    error("function $funcname failed with the following error: $(e.msg)")
+  end
   Price=blsprice(F0,K,r,T,σ,r,FlagIsCall);
 return Price;
 end
@@ -94,7 +104,12 @@ julia> blsdelta(10.0,10.0,0.01,2.0,0.2,0.01)
 ```
 """
 function blsdelta{num1 ,num2 ,num3 ,num4 ,num5 ,num6 <: Number}(S0::num1,K::num2,r::num3,T::num4,σ::num5,d::num6=0.0,FlagIsCall::Bool=true)
-  blscheck(S0,K,r,T,σ,d);
+  funcname="blsdelta";
+  try
+    blscheck(S0,K,r,T,σ,d);
+  catch e
+    error("function $funcname failed with the following error: $(e.msg)")
+  end
   d1=(log(S0/K)+(r-d+σ*σ*0.5)*T)/(σ*sqrt(T));
   Δ=0.0;
   if FlagIsCall
@@ -129,8 +144,13 @@ julia> blsgamma(10.0,10.0,0.01,2.0,0.2,0.01)
 ```
 """
 function blsgamma{num1 ,num2 ,num3 ,num4 ,num5 ,num6 <: Number}(S0::num1,K::num2,r::num3,T::num4,σ::num5,d::num6=0.0,FlagIsCall::Bool=true)
+  funcname="blsgamma";
   #For coherence i left the last boolean input.
-  blscheck(S0,K,r,T,σ,d);
+  try
+    blscheck(S0,K,r,T,σ,d);
+  catch e
+    error("function $funcname failed with the following error: $(e.msg)")
+  end
   d1=(log(S0/K)+(r-d+σ*σ*0.5)*T)/(σ*sqrt(T));
   Γ=exp(-d*T)*normpdf(d1)/(S0*σ*sqrt(T));
 return Γ;
@@ -160,8 +180,13 @@ julia> blsvega(10.0,10.0,0.01,2.0,0.2,0.01)
 ```
 """
 function blsvega{num1 ,num2 ,num3 ,num4 ,num5 ,num6 <: Number}(S0::num1,K::num2,r::num3,T::num4,σ::num5,d::num6=0.0,FlagIsCall::Bool=true)
+  funcname="blsvega";
   #For coherence i left the last boolean input.
-  blscheck(S0,K,r,T,σ,d);
+  try
+    blscheck(S0,K,r,T,σ,d);
+  catch e
+    error("function $funcname failed with the following error: $(e.msg)")
+  end
   d1=(log(S0/K)+(r-d+σ*σ*0.5)*T)/(σ*sqrt(T));
   ν=S0*exp(-d*T)*normpdf(d1)*sqrt(T);
 return ν;
@@ -191,7 +216,12 @@ julia> blsrho(10.0,10.0,0.01,2.0,0.2,0.01)
 ```
 """
 function blsrho{num1 ,num2 ,num3 ,num4 ,num5 ,num6 <: Number}(S0::num1,K::num2,r::num3,T::num4,σ::num5,d::num6=0.0,FlagIsCall::Bool=true)
-  blscheck(S0,K,r,T,σ,d);
+  funcname="blsrho";
+  try
+    blscheck(S0,K,r,T,σ,d);
+  catch e
+    error("function $funcname failed with the following error: $(e.msg)")
+  end
   d2=(log(S0/K)+(r-d-σ*σ*0.5)*T)/(σ*sqrt(T));
   if FlagIsCall
 	  ρ=K*exp(-r*T)*normcdf(d2)*T;
@@ -225,7 +255,12 @@ julia> blstheta(10.0,10.0,0.01,2.0,0.2,0.01)
 ```
 """
 function blstheta{num1 ,num2 ,num3 ,num4 ,num5 ,num6 <: Number}(S0::num1,K::num2,r::num3,T::num4,σ::num5,d::num6=0.0,FlagIsCall::Bool=true)
+  funcname="blstheta";
+    try
     blscheck(S0,K,r,T,σ,d);
+  catch e
+    error("function $funcname failed with the following error: $(e.msg)")
+  end
 	sqrtT       = sqrt(T);
 	σ_sqrtT = σ .* sqrtT;
 
@@ -267,7 +302,12 @@ julia> blslambda(10.0,10.0,0.01,2.0,0.2,0.01)
 ```
 """
 function blslambda{num1 ,num2 ,num3 ,num4 ,num5 ,num6 <: Number}(S0::num1,K::num2,r::num3,T::num4,σ::num5,d::num6=0.0,FlagIsCall::Bool=true)
-  blscheck(S0,K,r,T,σ,d);
+  funcname="blslambda";
+  try
+    blscheck(S0,K,r,T,σ,d);
+  catch e
+    error("function $funcname failed with the following error: $(e.msg)")
+  end
   Price=blsprice(S0,K,r,T,σ,d,FlagIsCall);
   Δ=blsdelta(S0,K,r,T,σ,d,FlagIsCall);
   Λ=Δ*S0/Price;
@@ -404,16 +444,21 @@ julia> blsimpv(10.0,10.0,0.01,2.0,2.0)
 ```
 """
 function blsimpv{num1 ,num2 ,num3 ,num4 ,num5 ,num6 <: Real}(S0::num1,K::num2,r::num3,T::num4,Price::num5,d::num6=0.0,FlagIsCall::Bool=true,xtol::Real=1e-14,ytol::Real=1e-15)
+  funcname="blsimpv";
 if (Price< num5(0))
 	error("Option Price Cannot Be Negative")
 end
-blscheck(S0,K,r,T,0.1,d);
+try
+    blscheck(S0,K,r,T,0.1,d);
+  catch e
+    error("function $funcname failed with the following error: $(e.msg)")
+  end
 f(x)=(blsprice(S0,K,r,T,x,d,FlagIsCall)-Price);
 σ=0;
 try
 	σ=brentMethod(f,0.001,1.2,xtol,ytol);
 catch e
-	error("The Inversion of Black Scholes Price Failed with the following error: $e")
+	error("The Inversion of Black Scholes Price Failed with the following error: $(e.msg)")
 end
 
 return σ;
@@ -423,10 +468,10 @@ export blkimpv
 """
 Black Implied Volatility for European Options
 
-    σ=blkimpv(S0,K,r,T,Price,d=0.0,FlagIsCall=true,xtol=1e-14,ytol=1e-15)
+    σ=blkimpv(F0,K,r,T,Price,d=0.0,FlagIsCall=true,xtol=1e-14,ytol=1e-15)
 
 Where:\n
-	S0         = Value of the Forward.
+	F0         = Value of the Forward.
 	K          = Strike Price of the Option.
 	r          = Zero Rate.
 	T          = Time to Maturity of the Option.
@@ -441,9 +486,15 @@ julia> blkimpv(10.0,10.0,0.01,2.0,2.0)
 0.36568658096623635
 ```
 """
-function blkimpv{num1 ,num2 ,num3 ,num4 ,num5 <: Real}(S0::num1,K::num2,r::num3,T::num4,Price::num5,FlagIsCall::Bool=true,xtol::Real=1e-14,ytol::Real=1e-15)
-σ=blsimpv(S0,K,r,T,Price,r,FlagIsCall,xtol,ytol)
-return σ;
+function blkimpv{num1 ,num2 ,num3 ,num4 ,num5 <: Real}(F0::num1,K::num2,r::num3,T::num4,Price::num5,FlagIsCall::Bool=true,xtol::Real=1e-14,ytol::Real=1e-15)
+  funcname="blkimpv";
+  try
+    blscheck(F0,K,r,T,0.1,d);
+  catch e
+    error("function $funcname failed with the following error: $(e.msg)")
+  end
+  σ=blsimpv(F0,K,r,T,Price,r,FlagIsCall,xtol,ytol)
+  return σ;
 end
 
 ##	ADDITIONAL Function
@@ -471,7 +522,12 @@ julia> blspsi(10.0,10.0,0.01,2.0,0.2,0.01)
 ```
 """
 function blspsi{num1 ,num2 ,num3 ,num4 ,num5 ,num6 <: Number}(S0::num1,K::num2,r::num3,T::num4,σ::num5,d::num6=0.0,FlagIsCall::Bool=true)
-  blscheck(S0,K,r,T,σ,d);
+  funcname="blspsi";
+  try
+    blscheck(S0,K,r,T,σ,d);
+  catch e
+    error("function $funcname failed with the following error: $(e.msg)")
+  end
   d1=(log(S0/K)+(r-d+σ*σ*0.5)*T)/(σ*sqrt(T));
   if FlagIsCall
 	  Ψ=-S0*exp(-d*T)*normcdf(d1)*T;
@@ -505,7 +561,12 @@ julia> blsvanna(10.0,10.0,0.01,2.0,0.2,0.01)
 ```
 """
 function blsvanna{num1 ,num2 ,num3 ,num4 ,num5 ,num6 <: Number}(S0::num1,K::num2,r::num3,T::num4,σ::num5,d::num6=0.0,FlagIsCall::Bool=true)
-  blscheck(S0,K,r,T,σ,d);
+  funcname="blsvanna";
+  try
+    blscheck(S0,K,r,T,σ,d);
+  catch e
+    error("function $funcname failed with the following error: $(e.msg)")
+  end
   d1=(log(S0/K)+(r-d+σ*σ*0.5)*T)/(σ*sqrt(T));
   d2=d1-σ*sqrt(T);
   Vanna=-exp(-d*T)*normpdf(d1)*d2/σ;
@@ -516,7 +577,7 @@ end
 Black & Scholes Charm for European Options
 
     Charm=blscharm(S0,K,r,T,σ,d=0.0,FlagIsCall=true)
-	
+
 Where:\n
 	S0         = Value of the Underlying.
 	K          = Strike Price of the Option.
@@ -535,10 +596,15 @@ julia> blscharm(10.0,10.0,0.01,2.0,0.2,0.01)
 ```
 """
 function blscharm{num1 ,num2 ,num3 ,num4 ,num5 ,num6 <: Number}(S0::num1,K::num2,r::num3,T::num4,σ::num5,d::num6=0.0,FlagIsCall::Bool=true)
-  blscheck(S0,K,r,T,σ,d);
+  funcname="blscharm";
+  try
+    blscheck(S0,K,r,T,σ,d);
+  catch e
+    error("function $funcname failed with the following error: $(e.msg)")
+  end
   d1=(log(S0/K)+(r-d+σ*σ*0.5)*T)/(σ*sqrt(T));
   d2=d1-σ*sqrt(T);
-  
+
   Out=((2*(r-d)*T-d2*σ*sqrt(T))/(2*T*σ*sqrt(T)))*(-exp(-d*T)*normpdf(d1));
   if FlagIsCall
 	Out+=d*exp(-d*T)*normcdf(d1);
@@ -552,7 +618,7 @@ end
 Black & Scholes Vomma for European Options
 
     Vomma=blsvomma(S0,K,r,T,σ,d=0.0,FlagIsCall=true)
-	
+
 Where:\n
 	S0         = Value of the Underlying.
 	K          = Strike Price of the Option.
@@ -571,7 +637,12 @@ julia> blsvomma(10.0,10.0,0.01,2.0,0.2,0.01)
 ```
 """
 function blsvomma{num1 ,num2 ,num3 ,num4 ,num5 ,num6 <: Number}(S0::num1,K::num2,r::num3,T::num4,σ::num5,d::num6=0.0,FlagIsCall::Bool=true)
-  blscheck(S0,K,r,T,σ,d);
+  funcname="blsvomma";
+  try
+    blscheck(S0,K,r,T,σ,d);
+  catch e
+    error("function $funcname failed with the following error: $(e.msg)")
+  end
   Out=blsvega(S0,K,r,T,σ,d,FlagIsCall);
   d1=(log(S0/K)+(r-d+σ*σ*0.5)*T)/(σ*sqrt(T));
   d2=d1-σ*sqrt(T);
@@ -583,7 +654,7 @@ end
 Black & Scholes Veta for European Options
 
     Veta=blsveta(S0,K,r,T,σ,d=0.0,FlagIsCall=true)
-	
+
 Where:\n
 	S0         = Value of the Underlying.
 	K          = Strike Price of the Option.
@@ -602,7 +673,12 @@ julia> blsveta(10.0,10.0,0.01,2.0,0.2,0.01)
 ```
 """
 function blsveta{num1 ,num2 ,num3 ,num4 ,num5 ,num6 <: Number}(S0::num1,K::num2,r::num3,T::num4,σ::num5,d::num6=0.0,FlagIsCall::Bool=true)
-  blscheck(S0,K,r,T,σ,d);
+  funcname="blsveta";
+  try
+    blscheck(S0,K,r,T,σ,d);
+  catch e
+    error("function $funcname failed with the following error: $(e.msg)")
+  end
   d1=(log(S0/K)+(r-d+σ*σ*0.5)*T)/(σ*sqrt(T));
   d2=d1-σ*sqrt(T);
   Out=S0*exp(-d*T)*normpdf(d1)*sqrt(T)*(d+(r-d)*d1/(σ*sqrt(T))-(1+d1*d2)/(2*T));
