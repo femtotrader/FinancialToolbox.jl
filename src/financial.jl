@@ -489,7 +489,7 @@ julia> blkimpv(10.0,10.0,0.01,2.0,2.0)
 function blkimpv{num1 ,num2 ,num3 ,num4 ,num5 <: Real}(F0::num1,K::num2,r::num3,T::num4,Price::num5,FlagIsCall::Bool=true,xtol::Real=1e-14,ytol::Real=1e-15)
   funcname="blkimpv";
   try
-    blscheck(F0,K,r,T,0.1,d);
+    blscheck(F0,K,r,T,0.1);
   catch e
     error("function $funcname failed with the following error: $(e.msg)")
   end
