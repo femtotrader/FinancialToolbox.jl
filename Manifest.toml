@@ -131,9 +131,9 @@ version = "1.11.0"
 
 [[deps.FinancialToolbox]]
 deps = ["ChainRulesCore", "Dates", "IrrationalConstants", "MuladdMacro", "Requires", "SpecialFunctions", "Test"]
-git-tree-sha1 = "56dddf9619ef896307031c8c0515e4f7ad1da0b1"
+git-tree-sha1 = "b8e1c16f169f81874004196354994da0aaa4a6d5"
 uuid = "2edd74a5-e968-5e45-af77-76d29aa6a478"
-version = "0.7.0"
+version = "0.7.1"
 
 [[deps.Franklin]]
 deps = ["Dates", "DelimitedFiles", "DocStringExtensions", "ExprTools", "FranklinTemplates", "HTTP", "Literate", "LiveServer", "Logging", "Markdown", "NodeJS", "OrderedCollections", "Pkg", "REPL", "Random", "TOML"]
