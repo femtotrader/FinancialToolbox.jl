@@ -7,7 +7,7 @@ outputs = loaded_obj["output"]
 N = length(inputs);
 toll = 1e-12
 toll_vol = 1e-3
-counter = 0
+counter_el = 0
 for i = 1:N
     r = 0.0
     cur_el = inputs[i]
@@ -29,8 +29,8 @@ for i = 1:N
         #sigma_loaded = outputs[i]["implied_volatility_from_a_transformed_rational_guess_with_limited_iterations"]
         if abs(sigma_computed - sigma) > toll_vol
             @show F, K, T, iscall, sigma, sigma_computed
-            counter += 1
+            counter_el += 1
         end
     end
 end
-println("counter : ", counter)
+println("counter : ", counter_el)
