@@ -1,4 +1,4 @@
-# FinancialToolbox
+# FinancialToolbox <img src="etc/logo.png" width="40">  
 [![status](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![](https://img.shields.io/badge/docs-stable-blue.svg)](https://rcalxrc08.github.io/FinancialToolbox.jl/)
 [![CI](https://github.com/rcalxrc08/FinancialToolbox.jl/actions/workflows/CI.yml/badge.svg?branch=master)](https://github.com/rcalxrc08/FinancialToolbox.jl/actions/workflows/CI.yml)
