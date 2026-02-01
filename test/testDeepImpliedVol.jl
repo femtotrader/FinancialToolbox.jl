@@ -29,7 +29,7 @@ for i = 1:N
         #sigma_loaded = outputs[i]["implied_volatility_from_a_transformed_rational_guess_with_limited_iterations"]
         if abs(sigma_computed - sigma) > toll_vol
             @show F, K, T, iscall, sigma, sigma_computed
-            counter_el += 1
+            global counter_el += 1
         end
     end
 end
