@@ -12,7 +12,7 @@ r = 0.02;
 T = 2.0;
 sigma = 0.2;
 d = 0.01;
-assert_(value, toll) = @test abs(value) < toll
+assert_fwd(value, toll) = @test abs(value) < toll
 #EuropeanCall Option
 PriceCall = blsprice(spot, K, r, T, sigma, d);
 DeltaCall = blsdelta(spot, K, r, T, sigma, d);
@@ -37,18 +37,18 @@ Vega = blsvega(spot, K, r, T, sigma, d);
 DerToll = 1e-13;
 #Function definition
 #Call
-FcallDual(spot) = blsprice(spot, K, r, T, sigma, d);
-GcallDual(r) = blsprice(spot, K, r, T, sigma, d);
-HcallDual(T) = blsprice(spot, K, r, T, sigma, d);
-LcallDual(sigma) = blsprice(spot, K, r, T, sigma, d);
-PcallDual(spot) = blsprice(spot, K, r, T, sigma, d) * spot.value / blsprice(spot.value, K, r, T, sigma, d);
-VcallDual(sigma) = blsdelta(spot, K, r, T, sigma, d);
+FcallDualFwd(spot) = blsprice(spot, K, r, T, sigma, d);
+GcallDualFwd(r) = blsprice(spot, K, r, T, sigma, d);
+HcallDualFwd(T) = blsprice(spot, K, r, T, sigma, d);
+LcallDualFwd(sigma) = blsprice(spot, K, r, T, sigma, d);
+PcallDualFwd(spot) = blsprice(spot, K, r, T, sigma, d) * spot.value / blsprice(spot.value, K, r, T, sigma, d);
+VcallDualFwd(sigma) = blsdelta(spot, K, r, T, sigma, d);
 #Put
-FputDual(spot) = blsprice(spot, K, r, T, sigma, d, false);
-GputDual(r) = blsprice(spot, K, r, T, sigma, d, false);
-HputDual(T) = blsprice(spot, K, r, T, sigma, d, false);
-PputDual(spot) = blsprice(spot, K, r, T, sigma, d, false) * spot.value / blsprice(spot.value, K, r, T, sigma, d, false);
-VPutDual(sigma) = blsdelta(spot, K, r, T, sigma, d, false);
+FputDualFwd(spot) = blsprice(spot, K, r, T, sigma, d, false);
+GputDualFwd(r) = blsprice(spot, K, r, T, sigma, d, false);
+HputDualFwd(T) = blsprice(spot, K, r, T, sigma, d, false);
+PputDualFwd(spot) = blsprice(spot, K, r, T, sigma, d, false) * spot.value / blsprice(spot.value, K, r, T, sigma, d, false);
+VPutDualFwd(sigma) = blsdelta(spot, K, r, T, sigma, d, false);
 #Input
 SpotDual = Dual_(spot, 1.0);
 rDual = Dual_(r, 1.0);
@@ -59,30 +59,30 @@ SigmaDual = Dual_(sigma, 1.0);
 #TEST
 print_colored("--- European Call Sensitivities: DualNumbers\n", :yellow)
 print_colored("-----Testing Delta\n", :blue);
-assert_(FcallDual(SpotDual).partials[1] - DeltaCall, DerToll)
+assert_fwd(FcallDualFwd(SpotDual).partials[1] - DeltaCall, DerToll)
 print_colored("-----Testing Rho\n", :blue);
-assert_(GcallDual(rDual).partials[1] - RhoCall, DerToll)
+assert_fwd(GcallDualFwd(rDual).partials[1] - RhoCall, DerToll)
 print_colored("-----Testing Theta\n", :blue);
-assert_(-HcallDual(TDual).partials[1] - ThetaCall, DerToll)
+assert_fwd(-HcallDualFwd(TDual).partials[1] - ThetaCall, DerToll)
 print_colored("-----Testing Lambda\n", :blue);
-assert_(PcallDual(SpotDual).partials[1] - LambdaCall, DerToll)
+assert_fwd(PcallDualFwd(SpotDual).partials[1] - LambdaCall, DerToll)
 print_colored("-----Testing Vanna\n", :blue);
-assert_(VcallDual(SigmaDual).partials[1] - VannaCall, DerToll)
+assert_fwd(VcallDualFwd(SigmaDual).partials[1] - VannaCall, DerToll)
 #TEST
 print_colored("--- European Put Sensitivities: DualNumbers\n", :yellow)
 print_colored("-----Testing Delta\n", :blue);
-assert_(FputDual(SpotDual).partials[1] - DeltaPut, DerToll)
+assert_fwd(FputDualFwd(SpotDual).partials[1] - DeltaPut, DerToll)
 print_colored("-----Testing Rho\n", :blue);
-assert_(GputDual(rDual).partials[1] - RhoPut, DerToll)
+assert_fwd(GputDualFwd(rDual).partials[1] - RhoPut, DerToll)
 print_colored("-----Testing Theta\n", :blue);
-assert_(-HputDual(TDual).partials[1] - ThetaPut, DerToll)
+assert_fwd(-HputDualFwd(TDual).partials[1] - ThetaPut, DerToll)
 print_colored("-----Testing Lambda\n", :blue);
-assert_(PputDual(SpotDual).partials[1] - LambdaPut, DerToll)
+assert_fwd(PputDualFwd(SpotDual).partials[1] - LambdaPut, DerToll)
 print_colored("-----Testing Vanna\n", :blue);
-assert_(VPutDual(SigmaDual).partials[1] - VannaPut, DerToll)
+assert_fwd(VPutDualFwd(SigmaDual).partials[1] - VannaPut, DerToll)
 
 print_colored("-----Testing Vega\n", :blue);
-assert_(LcallDual(SigmaDual).partials[1] - Vega, DerToll)
+assert_fwd(LcallDualFwd(SigmaDual).partials[1] - Vega, DerToll)
 print_colored("Dual Numbers Test Passed\n", :green)
 println("")
 
@@ -141,10 +141,10 @@ print_colored("Dual Input Validation Test Passed\n", :magenta)
 
 price_dual = blsprice(SpotDual, K, r, T, sigma, d)
 sigma_h1 = blsimpv(SpotDual, K, r, T, price_dual, d)
-assert_(sigma_h1.value - sigma, DerToll)
-assert_(sigma_h1.partials[1], DerToll)
+assert_fwd(sigma_h1.value - sigma, DerToll)
+assert_fwd(sigma_h1.partials[1], DerToll)
 
 price_dual2 = blsprice(SpotDual, K, r, T, SigmaDual, d)
 sigma_h2 = blsimpv(SpotDual, K, r, T, price_dual2, d)
-assert_(sigma_h2.value - SigmaDual.value, DerToll)
-assert_(sigma_h2.partials[1] - SigmaDual.partials[1], DerToll)
+assert_fwd(sigma_h2.value - SigmaDual.value, DerToll)
+assert_fwd(sigma_h2.partials[1] - SigmaDual.partials[1], DerToll)

@@ -12,11 +12,11 @@ d = 0.01;
 toll = 1e-4
 
 #EuropeanCall Option
-f(S0) = blsprice(S0, K, r, T, sigma, d);
+f_zyg(S0) = blsprice(S0, K, r, T, sigma, d);
 delta_1 = blsdelta(spot, K, r, T, sigma, d);
-delta_v = Zygote.gradient(f, spot)
+delta_v = Zygote.gradient(f_zyg, spot)
 @test(abs(delta_v[1] - delta_1) < toll)
-price = f(spot)
-f2(S0) = blsimpv(S0, K, r, T, price, d);
-delta_v = Zygote.gradient(f2, spot)
+price = f_zyg(spot)
+f_zyg2(S0) = blsimpv(S0, K, r, T, price, d);
+delta_v = Zygote.gradient(f_zyg2, spot)
 @test(abs(delta_v[1] + 0.10586634302510232) < toll)

@@ -117,19 +117,19 @@ end
 #     # return normcdf(val) + sum(integrate(normpdf_res * grad[i], i, extreme_points[i][0][1]) for i in eachindex(grad)) #- tmp_el
 # end
 
-value__d(x::Taylor1) = @views x[0]
-value__d(x::TaylorN) = @views x[0][1]
-value__d(x) = x
-!hasmethod(isless, (Taylor1, Taylor1)) ? (Base.isless(x::Taylor1, y::Taylor1) = @views value__d(x) < value__d(y)) : nothing
-!hasmethod(isless, (TaylorN, TaylorN)) ? (Base.isless(x::TaylorN, y::TaylorN) = @views value__d(x) < value__d(y)) : nothing
+value_taylor(x::Taylor1) = @views x[0]
+value_taylor(x::TaylorN) = @views x[0][1]
+value_taylor(x) = x
+!hasmethod(isless, (Taylor1, Taylor1)) ? (Base.isless(x::Taylor1, y::Taylor1) = @views value_taylor(x) < value_taylor(y)) : nothing
+!hasmethod(isless, (TaylorN, TaylorN)) ? (Base.isless(x::TaylorN, y::TaylorN) = @views value_taylor(x) < value_taylor(y)) : nothing
 
 # function blsimpv_impl(::Taylor1, S0, K, r, T, price_d, d, FlagIsCall, xtol, ytol)
-#     S0_r = value__d(S0)
-#     K_r = value__d(K)
-#     r_r = value__d(r)
-#     T_r = value__d(T)
-#     p_r = value__d(price_d)
-#     d_r = value__d(d)
+#     S0_r = value_taylor(S0)
+#     K_r = value_taylor(K)
+#     r_r = value_taylor(r)
+#     T_r = value_taylor(T)
+#     p_r = value_taylor(price_d)
+#     d_r = value_taylor(d)
 #     sigma = blsimpv(S0_r, K_r, r_r, T_r, p_r, d_r, FlagIsCall, xtol, ytol)
 #     der_ = (price_d - blsprice(S0, K, r, T, sigma, d, FlagIsCall)) / blsvega(S0_r, K_r, r_r, T_r, sigma, d_r)
 #     out = sigma + der_
@@ -138,10 +138,10 @@ value__d(x) = x
 get_order_adj(x::Taylor1) = get_order(x)
 get_order_adj(::Any) = 0
 function blimpv_impl(::Taylor1{V}, S0, K, T, price_d, FlagIsCall, xtol, n_iter_max) where {V}
-    S0_r = value__d(S0)
-    K_r = value__d(K)
-    T_r = value__d(T)
-    p_r = value__d(price_d)
+    S0_r = value_taylor(S0)
+    K_r = value_taylor(K)
+    T_r = value_taylor(T)
+    p_r = value_taylor(price_d)
     sigma = blimpv(S0_r, K_r, T_r, p_r, FlagIsCall, xtol, n_iter_max)
     max_order = maximum(map(x -> get_order_adj(x), (S0, K, T, price_d)))
     vega = blvega_impl(S0_r, K_r, T_r, sigma)
@@ -161,12 +161,12 @@ function blimpv_impl(::Taylor1{V}, S0, K, T, price_d, FlagIsCall, xtol, n_iter_m
     return Taylor1(σ_coeffs)
 end
 # function blsimpv_impl(::TaylorN, S0, K, r, T, price_d, d, FlagIsCall, xtol, ytol)
-#     S0_r = value__d(S0)
-#     K_r = value__d(K)
-#     r_r = value__d(r)
-#     T_r = value__d(T)
-#     p_r = value__d(price_d)
-#     d_r = value__d(d)
+#     S0_r = value_taylor(S0)
+#     K_r = value_taylor(K)
+#     r_r = value_taylor(r)
+#     T_r = value_taylor(T)
+#     p_r = value_taylor(price_d)
+#     d_r = value_taylor(d)
 #     sigma = blsimpv(S0_r, K_r, r_r, T_r, p_r, d_r, FlagIsCall, xtol, ytol)
 #     der_ = (price_d - blsprice(S0, K, r, T, sigma, d, FlagIsCall)) / blsvega(S0_r, K_r, r_r, T_r, sigma, d_r, FlagIsCall)
 #     out = sigma + der_
@@ -175,12 +175,12 @@ end
 
 # @inline function blsimpv_impl(::TaylorN, S0, K, r, T, price_d, d, FlagIsCall, xtol, ytol)
 #     zero_type = S0 * K * r * T * d * price_d * 0
-#     S0_r = value__d(S0)
-#     K_r = value__d(K)
-#     r_r = value__d(r)
-#     T_r = value__d(T)
-#     p_r = value__d(price_d)
-#     d_r = value__d(d)
+#     S0_r = value_taylor(S0)
+#     K_r = value_taylor(K)
+#     r_r = value_taylor(r)
+#     T_r = value_taylor(T)
+#     p_r = value_taylor(price_d)
+#     d_r = value_taylor(d)
 #     sigma = blsimpv(S0_r, K_r, r_r, T_r, p_r, d_r, FlagIsCall, xtol, ytol)
 #     max_order = get_order(zero_type)
 #     vega = blsvega(S0_r, K_r, r_r, T_r, sigma, d_r)

@@ -21,21 +21,21 @@ PriceCallBlack = blkprice(spot, K, r, T, sigma);
 
 df(f, x, dx) = (f(x + dx) - f(x)) / dx
 dx = 1e-8;
-assert_(value, toll) = @test abs(value) < toll
+assert_dual(value, toll) = @test abs(value) < toll
 
 sigma1 = blsimpv(spot, K, r, T, PriceCall, d);
 ResDual = blsimpv(spotDual, K, r, T, PriceCall, d);
 DerDF_ = df(spot -> blsimpv(spot, K, r, T, PriceCall, d), spot, dx);
 
-assert_(sigma1 - ResDual, toll)
-assert_(DerDF_ - ResDual.epsilon, toll)
+assert_dual(sigma1 - ResDual, toll)
+assert_dual(DerDF_ - ResDual.epsilon, toll)
 
 sigma1 = blkimpv(spot, K, r, T, PriceCallBlack);
 ResDual = blkimpv(spotDual, K, r, T, PriceCallBlack);
 DerDF_ = df(spot -> blkimpv(spot, K, r, T, PriceCallBlack), spot, dx);
 
-assert_(sigma1 - ResDual, toll)
-assert_(DerDF_ - ResDual.epsilon, toll)
+assert_dual(sigma1 - ResDual, toll)
+assert_dual(DerDF_ - ResDual.epsilon, toll)
 
 print_colored("Starting DualNumbers Test\n", :green)
 
@@ -94,30 +94,30 @@ SigmaDual = Dual(sigma, 1.0);
 #TEST
 print_colored("--- European Call Sensitivities: DualNumbers\n", :yellow)
 print_colored("-----Testing Delta\n", :blue);
-assert_(FcallDual(SpotDual).epsilon - DeltaCall, DerToll)
+assert_dual(FcallDual(SpotDual).epsilon - DeltaCall, DerToll)
 print_colored("-----Testing Rho\n", :blue);
-assert_(GcallDual(rDual).epsilon - RhoCall, DerToll)
+assert_dual(GcallDual(rDual).epsilon - RhoCall, DerToll)
 print_colored("-----Testing Theta\n", :blue);
-assert_(-HcallDual(TDual).epsilon - ThetaCall, DerToll)
+assert_dual(-HcallDual(TDual).epsilon - ThetaCall, DerToll)
 print_colored("-----Testing Lambda\n", :blue);
-assert_(PcallDual(SpotDual).epsilon - LambdaCall, DerToll)
+assert_dual(PcallDual(SpotDual).epsilon - LambdaCall, DerToll)
 print_colored("-----Testing Vanna\n", :blue);
-assert_(VcallDual(SigmaDual).epsilon - VannaCall, DerToll)
+assert_dual(VcallDual(SigmaDual).epsilon - VannaCall, DerToll)
 #TEST
 print_colored("--- European Put Sensitivities: DualNumbers\n", :yellow)
 print_colored("-----Testing Delta\n", :blue);
-assert_(FputDual(SpotDual).epsilon - DeltaPut, DerToll)
+assert_dual(FputDual(SpotDual).epsilon - DeltaPut, DerToll)
 print_colored("-----Testing Rho\n", :blue);
-assert_(GputDual(rDual).epsilon - RhoPut, DerToll)
+assert_dual(GputDual(rDual).epsilon - RhoPut, DerToll)
 print_colored("-----Testing Theta\n", :blue);
-assert_(-HputDual(TDual).epsilon - ThetaPut, DerToll)
+assert_dual(-HputDual(TDual).epsilon - ThetaPut, DerToll)
 print_colored("-----Testing Lambda\n", :blue);
-assert_(PputDual(SpotDual).epsilon - LambdaPut, DerToll)
+assert_dual(PputDual(SpotDual).epsilon - LambdaPut, DerToll)
 print_colored("-----Testing Vanna\n", :blue);
-assert_(VPutDual(SigmaDual).epsilon - VannaPut, DerToll)
+assert_dual(VPutDual(SigmaDual).epsilon - VannaPut, DerToll)
 
 print_colored("-----Testing Vega\n", :blue);
-assert_(LcallDual(SigmaDual).epsilon - Vega, DerToll)
+assert_dual(LcallDual(SigmaDual).epsilon - Vega, DerToll)
 print_colored("Dual Numbers Test Passed\n", :green)
 println("")
 
@@ -177,10 +177,10 @@ print_colored("Dual Input Validation Test Passed\n", :magenta)
 
 price_dual = blsprice(SpotDual, K, r, T, sigma, d)
 sigma_h1 = blsimpv(SpotDual, K, r, T, price_dual, d)
-assert_(sigma_h1.value - sigma, DerToll)
-assert_(sigma_h1.epsilon, DerToll)
+assert_dual(sigma_h1.value - sigma, DerToll)
+assert_dual(sigma_h1.epsilon, DerToll)
 
 price_dual2 = blsprice(SpotDual, K, r, T, SigmaDual, d)
 sigma_h2 = blsimpv(SpotDual, K, r, T, price_dual2, d)
-assert_(sigma_h2.value - SigmaDual.value, DerToll)
-assert_(sigma_h2.epsilon - SigmaDual.epsilon, DerToll)
+assert_dual(sigma_h2.value - SigmaDual.value, DerToll)
+assert_dual(sigma_h2.epsilon - SigmaDual.epsilon, DerToll)

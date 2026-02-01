@@ -26,9 +26,15 @@ for i = 1:N
         n_iter = 5
         #sigma_computed = blkimpv(big(F), big(K), big(r), big(T), big(price_internal), iscall,big(xtol),n_iter)
         sigma_computed = blkimpv(F, K, r, T, price_internal, iscall, xtol, n_iter)
+        price_internal2 = blkprice(F, K, r, T, sigma, !iscall)
+        sigma_computed2 = 0.0
+        if price_internal2 != 0.0
+            sigma_computed2 = blkimpv(F, K, r, T, price_internal2, !iscall, xtol, n_iter)
+        end
+
         #sigma_loaded = outputs[i]["implied_volatility_from_a_transformed_rational_guess_with_limited_iterations"]
-        if abs(sigma_computed - sigma) > toll_vol
-            @show F, K, T, iscall, sigma, sigma_computed
+        if abs(sigma_computed - sigma) > toll_vol && abs(sigma_computed2 - sigma) > toll_vol
+            @show F, K, T, iscall, sigma, sigma_computed, sigma_computed2
             global counter_el += 1
         end
     end

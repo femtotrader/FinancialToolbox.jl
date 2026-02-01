@@ -15,7 +15,7 @@ r = 0.02;
 T = 2.0;
 sigma = 0.2;
 d = 0.01;
-assert_(value, toll) = @test abs(value) < toll
+assert_real(value, toll) = @test abs(value) < toll
 #EuropeanCall Option
 PriceCall = blsprice(spot, K, r, T, sigma, d);
 PriceCallBig = blsprice(big.([spot, K, r, T, sigma, d])...);
@@ -52,51 +52,51 @@ Vega = blsvega(spot, K, r, T, sigma, d);
 print_colored("---  European Call: Price and Sensitivities\n", :yellow)
 #Standard Test European Call Option
 print_colored("-----Testing Price\n", :blue);
-assert_(PriceCall - 1.191201316999582, testToll)
-assert_(PriceCall - 1.191201316999582, testToll)
-assert_(PriceCall - 1.191201316999582, testToll)
+assert_real(PriceCall - 1.191201316999582, testToll)
+assert_real(PriceCall - 1.191201316999582, testToll)
+assert_real(PriceCall - 1.191201316999582, testToll)
 print_colored("-----Testing Price Binary\n", :blue);
-assert_(PriceBinaryCall - 0.4533139191104102, testToll)
+assert_real(PriceBinaryCall - 0.4533139191104102, testToll)
 print_colored("-----Testing Black Price\n", :blue);
-assert_(PriceCallBlack - 1.080531820066428, testToll)
+assert_real(PriceCallBlack - 1.080531820066428, testToll)
 print_colored("-----Testing Delta\n", :blue);
-assert_(DeltaCall - 0.572434050810368, testToll)
+assert_real(DeltaCall - 0.572434050810368, testToll)
 print_colored("-----Testing Theta\n", :blue);
-assert_(ThetaCall + 0.303776337550247, testToll)
+assert_real(ThetaCall + 0.303776337550247, testToll)
 print_colored("-----Testing Rho\n", :blue);
-assert_(RhoCall - 9.066278382208203, testToll)
+assert_real(RhoCall - 9.066278382208203, testToll)
 print_colored("-----Testing Lambda\n", :blue);
-assert_(LambdaCall - 4.805518955034612, testToll)
+assert_real(LambdaCall - 4.805518955034612, testToll)
 print_colored("-----Testing Implied Volatility\n", :blue);
-assert_(SigmaCall - 0.2, testToll)
+assert_real(SigmaCall - 0.2, testToll)
 print_colored("-----Testing Implied Volatility Black\n", :blue);
-assert_(SigmaCallBlack - 0.2, testToll)
+assert_real(SigmaCallBlack - 0.2, testToll)
 print_colored("---  European Put: Price and Sensitivities\n", :yellow)
 #Standard Test European Put Option
 print_colored("-----Testing Price\n", :blue);
-assert_(PricePut - 0.997108975455260, testToll)
+assert_real(PricePut - 0.997108975455260, testToll)
 print_colored("-----Testing Binary Price\n", :blue);
-assert_(PriceBinaryPut - 0.507475520041913, testToll)
+assert_real(PriceBinaryPut - 0.507475520041913, testToll)
 print_colored("-----Testing Price Black\n", :blue);
-assert_(PricePutBlack - 1.080531820066428, testToll)
+assert_real(PricePutBlack - 1.080531820066428, testToll)
 print_colored("-----Testing Delta\n", :blue);
-assert_(DeltaPut + 0.407764622496387, testToll)
+assert_real(DeltaPut + 0.407764622496387, testToll)
 print_colored("-----Testing Theta\n", :blue);
-assert_(ThetaPut + 0.209638317050458, testToll)
+assert_real(ThetaPut + 0.209638317050458, testToll)
 print_colored("-----Testing Rho\n", :blue);
-assert_(RhoPut + 10.149510400838260, testToll)
+assert_real(RhoPut + 10.149510400838260, testToll)
 print_colored("-----Testing Lambda\n", :blue);
-assert_(LambdaPut + 4.089468980160465, testToll)
+assert_real(LambdaPut + 4.089468980160465, testToll)
 print_colored("-----Testing Implied Volatility\n", :blue);
-assert_(SigmaPut - 0.2, testToll)
+assert_real(SigmaPut - 0.2, testToll)
 print_colored("-----Testing Implied Volatility Black\n", :blue);
-assert_(SigmaPutBlack - 0.2, testToll)
+assert_real(SigmaPutBlack - 0.2, testToll)
 
 #Standard Test for Common Sensitivities
 print_colored("-----Testing Gamma\n", :blue);
-assert_(Gamma - 0.135178479404601, testToll)
+assert_real(Gamma - 0.135178479404601, testToll)
 print_colored("-----Testing Vega\n", :blue);
-assert_(Vega - 5.407139176184034, testToll)
+assert_real(Vega - 5.407139176184034, testToll)
 print_colored("Standard Test Passed\n", :green)
 println("")
 

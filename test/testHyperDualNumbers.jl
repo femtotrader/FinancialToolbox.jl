@@ -15,7 +15,7 @@ r = 0.02;
 T = 2.0;
 sigma = 0.2;
 d = 0.01;
-assert_(value, toll) = @test abs(value) < toll
+assert_hyper(value, toll) = @test abs(value) < toll
 #EuropeanCall Option
 PriceCall = blsprice(spot, K, r, T, sigma, d);
 DeltaCall = blsdelta(spot, K, r, T, sigma, d);
@@ -69,39 +69,39 @@ V11(spot, sigma) = blsprice(spot, K, r, T, sigma, d, false);
 #TEST
 print_colored("--- European Call Sensitivities: HyperDualNumbers\n", :yellow)
 print_colored("-----Testing Delta\n", :blue);
-assert_(F(SpotHyper).epsilon1 - DeltaCall, DerToll)
+assert_hyper(F(SpotHyper).epsilon1 - DeltaCall, DerToll)
 print_colored("-----Testing Gamma\n", :blue);
-assert_(FF1(SpotHyper).epsilon1 - Gamma, DerToll)
+assert_hyper(FF1(SpotHyper).epsilon1 - Gamma, DerToll)
 print_colored("-----Testing Gamma  2\n", :blue);
-assert_(F(SpotHyper).epsilon12 - Gamma, DerToll)
+assert_hyper(F(SpotHyper).epsilon12 - Gamma, DerToll)
 print_colored("-----Testing Rho\n", :blue);
-assert_(G(rHyper).epsilon1 - RhoCall, DerToll)
+assert_hyper(G(rHyper).epsilon1 - RhoCall, DerToll)
 print_colored("-----Testing Theta\n", :blue);
-assert_(-H(THyper).epsilon1 - ThetaCall, DerToll)
+assert_hyper(-H(THyper).epsilon1 - ThetaCall, DerToll)
 print_colored("-----Testing Lambda\n", :blue);
-assert_(P(SpotHyper).epsilon1 - LambdaCall, DerToll)
+assert_hyper(P(SpotHyper).epsilon1 - LambdaCall, DerToll)
 print_colored("-----Testing Vanna\n", :blue);
-assert_(V(SigmaHyper).epsilon1 - VannaCall, DerToll)
+assert_hyper(V(SigmaHyper).epsilon1 - VannaCall, DerToll)
 print_colored("-----Testing Vanna  2\n", :blue);
-assert_(VV(hyper(spot, 1, 0, 0), hyper(sigma, 0, 1, 0)).epsilon12 - VannaCall, DerToll)
+assert_hyper(VV(hyper(spot, 1, 0, 0), hyper(sigma, 0, 1, 0)).epsilon12 - VannaCall, DerToll)
 
 ## Complex Test with Complex Step Approximation for European Put
 #TEST
 print_colored("--- European Put Sensitivities: HyperDualNumbers\n", :yellow)
 print_colored("-----Testing Delta\n", :blue);
-assert_(F1(SpotHyper).epsilon1 - DeltaPut, DerToll)
+assert_hyper(F1(SpotHyper).epsilon1 - DeltaPut, DerToll)
 print_colored("-----Testing Rho\n", :blue);
-assert_(G1(rHyper).epsilon1 - RhoPut, DerToll)
+assert_hyper(G1(rHyper).epsilon1 - RhoPut, DerToll)
 print_colored("-----Testing Theta\n", :blue);
-assert_(-H1(THyper).epsilon1 - ThetaPut, DerToll)
+assert_hyper(-H1(THyper).epsilon1 - ThetaPut, DerToll)
 print_colored("-----Testing Lambda\n", :blue);
-assert_(P1(SpotHyper).epsilon1 - LambdaPut, DerToll)
+assert_hyper(P1(SpotHyper).epsilon1 - LambdaPut, DerToll)
 print_colored("-----Testing Vanna\n", :blue);
-assert_(V1(SigmaHyper).epsilon1 - VannaPut, DerToll)
+assert_hyper(V1(SigmaHyper).epsilon1 - VannaPut, DerToll)
 print_colored("-----Testing Vanna  2\n", :blue);
-assert_(V11(hyper(spot, 1, 0, 0), hyper(sigma, 0, 1, 0)).epsilon12 - VannaPut, DerToll)
+assert_hyper(V11(hyper(spot, 1, 0, 0), hyper(sigma, 0, 1, 0)).epsilon12 - VannaPut, DerToll)
 print_colored("-----Testing Vega\n", :blue);
-assert_(L(SigmaHyper).epsilon1 - Vega, DerToll)
+assert_hyper(L(SigmaHyper).epsilon1 - Vega, DerToll)
 print_colored("Hyper Dual Numbers Test Passed\n\n", :green)
 
 #TEST OF INPUT VALIDATION
@@ -158,26 +158,26 @@ print_colored("Hyper Dual Input Validation Test Passed\n", :magenta)
 
 price_dual = blsprice(SpotHyper, K, r, T, sigma, d)
 sigma_h1 = blsimpv(SpotHyper, K, r, T, price_dual, d)
-assert_(sigma_h1.value - sigma, DerToll)
-assert_(sigma_h1.epsilon1, DerToll)
-assert_(sigma_h1.epsilon12, DerToll)
+assert_hyper(sigma_h1.value - sigma, DerToll)
+assert_hyper(sigma_h1.epsilon1, DerToll)
+assert_hyper(sigma_h1.epsilon12, DerToll)
 
 price_dual2 = blsprice(SpotHyper, K, r, T, SigmaHyper, d)
 sigma_h2 = blsimpv(SpotHyper, K, r, T, price_dual2, d)
-assert_(sigma_h2.value - SigmaHyper.value, DerToll)
-assert_(sigma_h2.epsilon1 - SigmaHyper.epsilon1, DerToll)
-assert_(sigma_h2.epsilon12 - SigmaHyper.epsilon12, DerToll)
+assert_hyper(sigma_h2.value - SigmaHyper.value, DerToll)
+assert_hyper(sigma_h2.epsilon1 - SigmaHyper.epsilon1, DerToll)
+assert_hyper(sigma_h2.epsilon12 - SigmaHyper.epsilon12, DerToll)
 
 price_dual2 = blsprice(SpotHyper, KHyper, r, T, SigmaHyper, d)
 sigma_h2 = blsimpv(SpotHyper, KHyper, r, T, price_dual2, d)
-assert_(sigma_h2.value - SigmaHyper.value, DerToll)
-assert_(sigma_h2.epsilon1 - SigmaHyper.epsilon1, DerToll)
-assert_(sigma_h2.epsilon12 - SigmaHyper.epsilon12, DerToll)
+assert_hyper(sigma_h2.value - SigmaHyper.value, DerToll)
+assert_hyper(sigma_h2.epsilon1 - SigmaHyper.epsilon1, DerToll)
+assert_hyper(sigma_h2.epsilon12 - SigmaHyper.epsilon12, DerToll)
 
 SigmaHyper = hyper(sigma, 1.0, 2.0, 3.0);
 price_dual2 = blsprice(SpotHyper, KHyper, r, T, SigmaHyper, d)
 sigma_h2 = blsimpv(SpotHyper, KHyper, r, T, price_dual2, d)
-assert_(sigma_h2.value - SigmaHyper.value, DerToll)
-assert_(sigma_h2.epsilon1 - SigmaHyper.epsilon1, DerToll)
-assert_(sigma_h2.epsilon2 - SigmaHyper.epsilon2, DerToll)
-assert_(sigma_h2.epsilon12 - SigmaHyper.epsilon12, DerToll)
+assert_hyper(sigma_h2.value - SigmaHyper.value, DerToll)
+assert_hyper(sigma_h2.epsilon1 - SigmaHyper.epsilon1, DerToll)
+assert_hyper(sigma_h2.epsilon2 - SigmaHyper.epsilon2, DerToll)
+assert_hyper(sigma_h2.epsilon12 - SigmaHyper.epsilon12, DerToll)
